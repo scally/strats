@@ -1,0 +1,2 @@
+# strats
+lightweight standup calendar
