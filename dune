@@ -1,0 +1,3 @@
+(executable
+ (name strats)
+ (libraries opium))
