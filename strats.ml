@@ -12,6 +12,15 @@ let show_config_handler _ =
   )
   |> Lwt.return
 
+let show_schedule_handler _ =
+  Response.of_json (
+    `Assoc
+    [
+      ("Schedule", `List (Schedule.schedule |> List.map ~f:(fun c -> `String c)))
+    ]
+  )
+  |> Lwt.return
+
 let liveness_handler _ =
   Response.of_json (
     `Assoc
@@ -23,6 +32,7 @@ let liveness_handler _ =
 
 let _ = 
   App.empty 
+  |> App.get "/schedule" show_schedule_handler
   |> App.get "/config" show_config_handler
   |> App.get "/liveness" liveness_handler
   |> App.run_command
