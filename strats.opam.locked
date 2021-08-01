@@ -1,0 +1,8 @@
+opam-version: "2.0"
+name: "strats"
+version: "0.1"
+depends: [
+  "ocaml" {= "4.12.0"}
+  "opium" {= "0.20.0"}
+]
+build: ["dune" "build"]
