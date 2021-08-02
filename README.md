@@ -15,6 +15,10 @@ This app is the ocaml version. There will also be one each for F#/Rescript, whic
 
 ## api
 
+`/today` view today's schedule
+
+`/day/:day` view schedule for day N
+
 `/schedule` view yearly schedule
 
 `/liveness` health check
