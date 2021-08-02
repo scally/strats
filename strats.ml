@@ -21,11 +21,8 @@ let show_schedule_handler _ =
   )
   |> Lwt.return
 
-let show_day_handler req = 
-  let (candidate, alternative) = 
-    Router.param req "day"
-    |> Int.of_string
-    |> Schedule.day_with_alternative in
+let day_response day =
+  let (candidate, alternative) = Schedule.day_with_alternative day in
   Response.of_json (
     `Assoc
     [
@@ -35,20 +32,16 @@ let show_day_handler req =
   )
   |> Lwt.return
 
+let show_day_handler req = 
+  Router.param req "day"
+    |> Int.of_string
+    |> day_response
+
 let show_today_handler _ =
   let today = 
     Unix.time()
     |> Unix.localtime in
-  let (candidate, alternative) = 
-    Schedule.day_with_alternative today.tm_yday in
-  Response.of_json (
-    `Assoc
-    [
-      ("Today", `String candidate);
-      ("Alternative", `String alternative)
-    ]
-  )
-  |> Lwt.return
+  day_response today.tm_yday
 
 let liveness_handler _ =
   Response.of_json (
