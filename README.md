@@ -3,7 +3,7 @@ Lightweight standup calendar
 
 This is an experiment building the same micro-app in multiple languages for a bake-off.
 
-This app is the ocaml version. There will also be one each for F#/[Rescript](https://github.com/scally/strats-rescript), which are other ML descendants.
+This app is the ocaml version. There will also be one each for [F#](https://github.com/scally/strats-fsharp)/[Rescript](https://github.com/scally/strats-rescript), which are other ML descendants.
 
 ## build
 
