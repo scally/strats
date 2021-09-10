@@ -1,33 +1,34 @@
-let shuffle candidates =
-  candidates 
-  |> List.sort (fun _ _ -> Random.int 2)
-
-let build_year candidates = 
-  let s = ref [] in
-  while List.length !s < 365 do
-    s := !s @ shuffle candidates
-  done;
-  !s
-
 module T = Map.Make(String)
-let all_schedules = 
-  let open Config in
-  let s = ref T.empty in
-  let { seed; candidates } = parse() in
-  let _ = Random.init seed in
-  let _ = s := T.add "main" (build_year candidates) !s in
-  let _ = List.iter (fun c -> 
-    let without = List.filter (fun innerC -> innerC != c) candidates in
-    let _ = s := T.add c (build_year without) !s in
-    ()
-    ) candidates in
-  !s
+let build_year candidates =
+  Seq.unfold (fun days_left -> 
+    let shuffle = List.sort (fun _ _ -> Random.int 2) in
+    let next_count = days_left - (candidates |> List.length) in
 
-let main_schedule = T.find "main" all_schedules
+    if next_count < 0 then
+      None
+    else
+      Some (shuffle candidates, next_count)
+    ) 366
+  |> List.of_seq
+  |> List.concat
+
+let build_yearly () = 
+  let open Config in
+  let { seed; candidates } = Config.parse() in
+  Random.init seed;
+  candidates
+  |> List.fold_left (fun m c -> 
+    let without excluded = List.filter (fun i -> i != excluded) in
+    let list_without_person = without c candidates in
+    T.add c (build_year list_without_person) m
+    ) (T.add "main" (build_year candidates) T.empty)
 
 let day schedule n = List.nth schedule n
 
+let main_schedule = T.find "main" (build_yearly())
+
 let day_with_alternative n =
+  let schedules = build_yearly() in
   let candidate = day main_schedule n in
-  let alternative = day (T.find candidate all_schedules) n in
+  let alternative = day (T.find candidate schedules) n in
   (candidate, alternative)
